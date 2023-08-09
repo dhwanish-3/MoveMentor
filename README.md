@@ -24,7 +24,7 @@ User would be rehearsing in front of the camera alonside which the demonstration
 
 The use cases of such a model are far fetching. 
 A good proportion of people prefer to employ their skillsets such as dancing and working out in their own terms and premises .
-There is a good majority of people who are self reserved and have complexes due to which they might not want to practise these skills at a non familiar environment under some instructor who would not fully grasp our shortcomings.
+There is a good majority of people who are self reserved and have complexes due to which they might not want to practise these skills at a non familiar environment under some instructor who would not fully grasp their shortcomings.
 
 The application could also be used to learn to mirror one's idol , Virat Kohli's cover drive, Rohit Sharma's pull shot, Lin Dan's smash Ronaldo's freekick etc to name a few. 
 
