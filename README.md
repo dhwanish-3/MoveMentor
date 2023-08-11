@@ -25,8 +25,10 @@ A statistical curve would be reuturned which is indicative of how mathching one'
 # TechStack
 
 * Flask Library to handle backend
-* Deep learning model build upon the VGG16 architecture to detect motion by tracking the 17 key points of human body
-* html, CSS, JavaScript for handling frontend 
+* Deep learning model MoveNet build upon the VGG16 architecture to detect motion by tracking the 17 key points of human body
+* html, CSS, JavaScript for handling frontend
+* chart.js and D3 libraries to create the accuracy score distribution curve
+  
 
 # Applications
 
