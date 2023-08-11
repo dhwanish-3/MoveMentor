@@ -12,6 +12,14 @@ User would be rehearsing in front of the camera alonside which the demonstration
 <img width="361" height = "361" alt="Screenshot 2023-08-09 at 10 24 02 PM" src="https://github.com/shellyannissa/4-The-People/assets/118563935/d88e8861-df61-4cdc-80c6-e971a98228bc">
 
 </div>
+<br/>
+A statistical curve would be reuturned which is indicative of how mathching one's gestures are to that of the actual video. On hovering over the points the user would be able to see the particular instant and his movements, also get information about possible corrections.
+
+<br/>
+
+
+<img width="437" alt="Screenshot 2023-08-11 at 10 22 56 PM" src="https://github.com/shellyannissa/4-The-People/assets/118563935/0c0dc29d-c668-499d-ad8c-0432a535d09b">
+
 
 
 # TechStack
