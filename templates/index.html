@@ -2,18 +2,54 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Upload</title>
+    <title>Instructor</title>
   </head>
-
   <body>
     <!-- <div>
       <img src="{{url_for('video')}}" width="650px" height="750px" />
     </div> -->
-
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-      <input type="file" name="video_file" />
-      <input type="submit" value="Upload Video" />
-    </form>
+    <header>
+      <div class="heading">
+        <h1>Instructor</h1>
+      </div>
+    </header>
+    <section class="main">
+      <div class="instruction">
+        <span>Upload a video  in mp4, webm or imov file format and to train out model for the video for your practice </span>
+      </div>
+      <div class="upload-button">
+        <form id="upload-form" action="/upload" method="POST" enctype="multipart/form-data">
+          <input id="video-select"  type="file" name="video_file" />
+          <label for="video-select" class="button upload" type="submit">Upload</label>
+        </form>
+      </div>
+    </section>
+    <section class="features">
+      <div class="specs">
+        <div class="image">
+          <img src="{{ url_for('static', filename='images/fast.png') }}" alt="fast">
+        </div>
+        <div class="name">Lightning Fast</div>
+        <span class="details">This cloud-hosted tool can help you learn what you need</span>
+      </div>
+      <div class="specs">
+        <div class="image">
+          <img src="{{ url_for('static', filename='images/easy.png') }}" alt="fast">
+        </div>
+        <div class="name">Easy To Use</div>
+        <span class="details">This cloud-hosted tool can help you learn what you need</span>
+      </div>
+      <div class="specs">
+        <div class="image">
+          <img src="{{ url_for('static', filename='images/free.png') }}" alt="fast">
+        </div>
+        <div class="name">Its Free</div>
+        <span class="details">This cloud-hosted tool can help you learn what you need</span>
+      </div>
+    </section>
+    <section class="footer"></section>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
   </body>
 </html>

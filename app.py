@@ -164,6 +164,9 @@ def store_video():
 def index():
     return render_template('index.html')
 
+@app.route('/recording')
+def recording():
+    return render_template('recording.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -182,7 +185,9 @@ def upload_file():
         file_table.append(file_path)
 
         store_video()
-        return jsonify({"message": "File uploaded successfully"}), 200
+        return redirect(url_for('recording'))
+        # return render_template('recording.html')
+        # return jsonify({"message": "File uploaded successfully"}), 200
 
 @app.route('/video')
 def video():
