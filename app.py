@@ -1,4 +1,4 @@
-from flask import Flask, Response, render_template, request, jsonify, send_from_directory
+from flask import Flask, Response, render_template, request, jsonify, redirect, url_for
 import tensorflow as tf
 import cv2
 import numpy as np
@@ -193,6 +193,16 @@ def upload_file():
 def video():
     return Response(time_frame(0, 400), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+@app.route('/save_video', methods=['POST'])
+def save_video():
+    video_file = request.files['video']
+    RECORDED_FOLDER = os.path.join(app.root_path, 'recorded')
+    if not os.path.exists(RECORDED_FOLDER):
+        os.makedirs(RECORDED_FOLDER)
+    if video_file:
+        video_file.save('recorded/recorded_video.webm')
+        return "Video saved successfully"
+    return "Video saving failed"
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -161,3 +161,9 @@ header {
     background-color: var(--mainColor);
     padding: 0.6rem 1rem;
 }
+
+.get-results .button {
+    margin-top: 2rem;
+    background-color: var(--mainColor);
+    padding: 0.6rem 1rem;
+}
