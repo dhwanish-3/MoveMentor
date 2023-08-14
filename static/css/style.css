@@ -146,6 +146,8 @@ header {
     background-color: var(--headerColor);
     height: 3rem;
     width: 100%;
+    bottom: 0;
+    position: absolute;
 }
 
 .buttons {
@@ -167,3 +169,23 @@ header {
     background-color: var(--mainColor);
     padding: 0.6rem 1rem;
 }
+
+/* for record.html */
+#videoElement {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 25%;
+  height: 20%;
+}
+/* #recordBtn {
+  background-image: url('https://w7.pngwing.com/pngs/151/750/png-transparent-phonograph-record-computer-icons-button-records-sound-phonograph-sound-recording-and-reproduction.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 50px;
+  height: 50px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+} */

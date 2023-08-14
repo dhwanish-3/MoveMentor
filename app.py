@@ -168,6 +168,16 @@ def index():
 def recording():
     return render_template('recording.html')
 
+@app.route('/results')
+def results():
+    return render_template('results.html')
+
+@app.route('/get_npy_data')
+def get_npy_data():
+    npy_array = np.load('np/0.npy')
+    json_data = npy_array.tolist()
+    return jsonify(json_data)
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'video_file' not in request.files:
