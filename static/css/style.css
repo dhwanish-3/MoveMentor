@@ -142,12 +142,12 @@ header {
 }
 
 .footer {
-    margin-top: 2rem;
+    margin-top: 3rem;
     background-color: var(--headerColor);
     height: 3rem;
     width: 100%;
+    position: relative;
     bottom: 0;
-    position: absolute;
 }
 
 .buttons {

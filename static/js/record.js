@@ -1,5 +1,3 @@
-// const startButton = document.getElementById('startBtn');
-// const stopButton = document.getElementById('stopBtn');
 const recordBtn = document.getElementById('recordBtn');
 let mediaRecorder;
 let recordedChunks = [];
@@ -9,7 +7,6 @@ const myVideo = document.getElementById("myVideo");
 
 const getResultsBtn = document.querySelector(".get-results");
 
-// stopButton.disabled = true;
 const videoElement = document.getElementById('videoElement');
 
 navigator.mediaDevices.getUserMedia({ video: true })
@@ -23,8 +20,6 @@ navigator.mediaDevices.getUserMedia({ video: true })
 
 recordBtn.addEventListener('click', async () => {
     console.log("inside start recording");
-    // startButton.disabled = true;
-    // startButton.textContent = 'Recording...';
     if (recordBtn.textContent === 'Start Recording') {
         recordedChunks = [];
         const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
@@ -61,16 +56,7 @@ recordBtn.addEventListener('click', async () => {
         recordBtn.textContent = 'Start Recording';
         console.log('Recorded Blobs: ', recordedChunks);
       }
-    // startButton.disabled = true;
-    // stopButton.disabled = false;
 });
-
-// stopButton.addEventListener('click', () => {
-//     mediaRecorder.stop();
-//     startButton.disabled = true;
-//     stopButton.disabled = true;
-//     getResultsBtn.innerHTML = `<button class="button" id="getResults">Get Results</button>`;
-// });
 
 function stopVideo() {
     videoPlayer.style.display = "none";
