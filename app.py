@@ -1,4 +1,4 @@
-from flask import Flask, Response, render_template, request, jsonify, send_from_directory
+from flask import Flask, Response, render_template, request, jsonify, redirect, url_for
 import tensorflow as tf
 import cv2
 import numpy as np
@@ -125,69 +125,6 @@ def time_frame(s, e):
     buffer_path = os.path.join(app.root_path, 'buffer.npy')
     # np_path = os.path.join(NP_FOLDER, str(file_counter)+'.npy')
     np.save(buffer_path, buffer_array)
-
-def store_cam():
-    camera = cv2.VideoCapture(0)
-    i = 0
-    # codec = cv2.VideoWriter_fourcc(*'H264')
-    # codec = cv2.VideoWriter_fourcc('M','P','4','V')
-    # codec = cv2.VideoWriter_fourcc('M','4','S','2')
-    codec = cv2.VideoWriter_fourcc(*'mp4v')
-    output_file = 'output2.mp4'
-    fps = 30
-    height = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    width = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
-    frame_size = (height , width)
-    camera.release()
-    out = cv2.VideoWriter(output_file, codec, fps, frame_size,True)
-    for i in range(200):
-        ret, frame = camera.read()
-        # frame = tf.image.resize_with_pad(np.expand_dims(frame, axis=0), 640, 480)
-        if not ret:
-            break
-        out.write(frame)
-        ret, buffer = cv2.imencode('.jpg', frame)
-        frame = buffer.tobytes()
-
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
-    camera.release()
-    out.release()
-
-def store_cam2():
-    camera = cv2.VideoCapture(0)
-    height = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    width = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
-    fourcc = cv2.VideoWriter_fourcc(*'VP80')
-
-    event_video_name = '_eventvideo.webm'
-    event_video = cv2.VideoWriter(event_video_name, fourcc, 5, (width, height))
-
-
-    for i in range(200):
-        ret, image = camera.read()
-        event_video.write(image)
-    event_video.release()
-
-def  store_cam3():
-    cam = cv2.VideoCapture(0)
-
-    frame_size = ( 1280,720)
-    output = cv2.VideoWriter('output.avi', cv2.VideoWriter_fourcc('M','J','P','G'), 20, frame_size)
-
-    for i in range(100):
-        ret, frame = cam.read()
-        if ret:
-            output.write(frame)
-        ret, buffer = cv2.imencode('.jpg', frame)
-        frame = buffer.tobytes()
-
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-    cam.release()
-
-
 
 
 def store_video():
@@ -342,6 +279,19 @@ def position():
 def index():
     return render_template('index.html')
 
+@app.route('/recording')
+def recording():
+    return render_template('recording.html')
+
+@app.route('/results')
+def results():
+    return render_template('results.html')
+
+@app.route('/get_npy_data')
+def get_npy_data():
+    npy_array = np.load('np/0.npy')
+    json_data = npy_array.tolist()
+    return jsonify(json_data)
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -359,10 +309,10 @@ def upload_file():
         file.save(file_path)
         file_table.append(file_path)
 
-        count = store_video()
-        # return jsonify({"message": "File uploaded successfully", "frame_count":count}), 200
-        return render_template('index1.html')
-    
+        store_video()
+        return redirect(url_for('recording'))
+        # return render_template('recording.html')
+        # return jsonify({"message": "File uploaded successfully"}), 200
 
 @app.route('/test')
 def test():
@@ -374,26 +324,16 @@ def test():
     return jsonify({"message":height, "width":width})
 
 
-
-    
-@app.route('/video')
-def video():
-    # return Response(time_frame2(0, 100), mimetype='multipart/x-mixed-replace; boundary=frame')
-    return Response(store_cam(), mimetype='multipart/x-mixed-replace; boundary=frame')
-    # store_cam3()
-
-@app.route('/position')
-def pos():
-    cap = cv2.VideoCapture('vid/sample.img')
-    position()
-    return jsonify({"message":"successfully scaled the images"})
-
-@app.route('/draw_over_cam')
-def draw_over_cam():
-
-    # return Response(superimpose(), mimetype='multipart/x-mixed-replace; boundary=frame')
-    return Response(final_cut(), mimetype='multipart/x-mixed-replace; boundary=frame')
-    
+@app.route('/save_video', methods=['POST'])
+def save_video():
+    video_file = request.files['video']
+    RECORDED_FOLDER = os.path.join(app.root_path, 'recorded')
+    if not os.path.exists(RECORDED_FOLDER):
+        os.makedirs(RECORDED_FOLDER)
+    if video_file:
+        video_file.save('recorded/recorded_video.webm')
+        return "Video saved successfully"
+    return "Video saving failed"
 
 if __name__ == '__main__':
     app.run(debug=True)

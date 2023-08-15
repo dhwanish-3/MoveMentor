@@ -1,0 +1,191 @@
+/* Import Google font - Poppins */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+:root{
+    --grey: #aeaeae;
+    --darkGrey: #6a6a6a;
+    --containerColor: #dedede;
+    --textColor: white;
+    --black: #000000;
+    --headerColor: #2b2334;
+    --mainColor: #43cdc8;
+    --footerColor: #3a3a3a;
+}
+body{
+    background: var(--containerColor);
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    transition: all 0.5s ease-out;
+  }
+::-webkit-scrollbar{
+    display: none;
+}
+
+.button{
+    padding: 0.8rem 2rem;
+    display: flex;
+    background: transparent;
+    border: none;
+    border-radius: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    color: var(--textColor);
+    transition: 300ms all;
+    width: fit-content;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    /* font-family: 'Varela Round', sans-serif; */
+    text-transform: uppercase;
+}
+.button:hover{
+    transform: scale(1.04);
+}
+
+@media screen and (max-width:700px){
+    body{
+        overflow-x: hidden;
+    }
+}
+
+header {
+    background: var(--headerColor);
+    width: 100%;
+}
+
+.heading {
+    color: var(--mainColor);
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+    margin: 1rem 0;
+    text-transform: uppercase;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4rem;
+}
+
+.upload {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--mainColor);
+    color: var(--black);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+#video-select {
+    display: none;
+    appearance: none;
+}
+
+.instruction {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 80%;
+}
+
+.features {
+    margin-top: 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 80%;
+    gap: 2rem;
+}
+
+.specs {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.image {
+    width: 100%;
+}
+
+.name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--black);
+}
+
+.details {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--black);
+    width: 70%;
+}
+
+.footer {
+    margin-top: 3rem;
+    background-color: var(--headerColor);
+    height: 3rem;
+    width: 100%;
+    position: relative;
+    bottom: 0;
+}
+
+.buttons {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    color: var(--black);
+}
+
+.buttons .button {
+    background-color: var(--mainColor);
+    padding: 0.6rem 1rem;
+}
+
+.get-results .button {
+    margin-top: 2rem;
+    background-color: var(--mainColor);
+    padding: 0.6rem 1rem;
+}
+
+/* for record.html */
+#videoElement {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 25%;
+  height: 20%;
+}
+/* #recordBtn {
+  background-image: url('https://w7.pngwing.com/pngs/151/750/png-transparent-phonograph-record-computer-icons-button-records-sound-phonograph-sound-recording-and-reproduction.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 50px;
+  height: 50px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+} */
