@@ -5,7 +5,7 @@ import numpy as np
 import time
 import os
 from werkzeug.utils import secure_filename
-
+from scipy.spatial import procrustes
 
 app = Flask(__name__)
 
@@ -82,9 +82,9 @@ def time_frame(s, e):
     codec = cv2.VideoWriter_fourcc(*'H264')
     output_file = 'output.mp4'
     fps = 30
-    frame_size = (640, 480)
+    frame_size = (720, 1280)
     out = cv2.VideoWriter(output_file, codec, fps, frame_size)
-    max_size = (s-e) * frame_count + 10
+    max_size = int((e-s) * frame_count + 10)
     buffer_array = np.empty((max_size, 1, 12, 3))
     j = 0
 
@@ -118,7 +118,7 @@ def time_frame(s, e):
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
         # trying to match the speed
-        time.sleep(frame_delay/2)
+        # time.sleep(frame_delay/2)
     start_stream = False
     cap.release()
     camera.release()
@@ -129,6 +129,7 @@ def time_frame(s, e):
 
 def store_video():
     video_path = file_table[file_counter]
+    video_path = 'vid/happy_dance.mp4'
     cap = cv2.VideoCapture(video_path)
     frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     array = np.empty((frame_count, 1, 12, 3))
@@ -158,6 +159,120 @@ def store_video():
     np.save(np_path, array)
 
     cap.release()
+    return i
+
+def time_frame2(s, e):
+    # cap = cv2.VideoCapture(file_table[file_counter])
+    global start_stream
+    start_stream = True
+    cap = cv2.VideoCapture('output.mp4')
+    # cap = cv2.VideoCapture('output.mp4')
+    frame_rate = cap.get(cv2.CAP_PROP_FPS)
+    if frame_rate == 0:
+        frame_rate = 30
+    frame_delay = 1 / frame_rate
+    for i in range(s, e, 1):
+        cap.set(cv2.CAP_PROP_POS_FRAMES, i)
+
+        success, frame = cap.read()
+
+        if not success:
+            break
+
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        # trying to match the speed
+        # time.sleep(frame_delay/2)
+    start_stream = False
+    cap.release()
+
+
+def final_cut():
+    i = 0
+    buffer_path = os.path.join(app.root_path, 'buffer.npy')
+    array = np.load(buffer_path)
+    limit = array.shape[0]
+    camera = cv2.VideoCapture(0)
+    while camera.isOpened():
+        ret, frame = camera.read()
+        img = frame.copy()
+        if not ret:
+            break
+        if i == limit:
+            break
+        img = tf.image.resize_with_pad(np.expand_dims(img, axis=0), 192, 192)
+        input_image = tf.cast(img, dtype=tf.float32)
+
+        input_details = interpreter.get_input_details()
+        output_details = interpreter.get_output_details()
+
+        interpreter.set_tensor(
+            input_details[0]['index'], np.array(input_image))
+        interpreter.invoke()
+        keypoints_with_scores = interpreter.get_tensor(
+            output_details[0]['index'])[:, :, 5:, :]
+
+        draw_key_points(frame, keypoints_with_scores, 0.4)
+        draw_connections(frame, keypoints_with_scores, EDGES, 0.4, False)
+        draw_key_points(frame, array[i], 0.4)
+        draw_connections(frame, array[i], EDGES, 0.4, True)
+        i = i + 1
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame_bytes = buffer.tobytes()
+        yield (b'--frame\r\nContent-Type:image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+
+    camera.release()
+
+
+def position():
+
+    picture = cv2.VideoCapture('/Users/shellyanissa/Pictures/standing2.webp')
+    ret, photo_frame = picture.read()
+
+    photo = tf.image.resize_with_pad(np.expand_dims(photo_frame, axis = 0), 192, 192)
+    input_photo = tf.cast(photo, dtype = tf.float32)
+
+    input_details = interpreter.get_input_details()
+    output_details = interpreter.get_output_details()
+
+    interpreter.set_tensor(input_details[0]['index'], np.array(input_photo))
+    interpreter.invoke()
+    my_posture = interpreter.get_tensor(output_details[0]['index'])[:,:,5:,:]
+
+    buffer_path = os.path.join(app.root_path, 'buffer.npy')
+    array = np.load(buffer_path)
+    frame_count = array.shape[0]
+    # for j in range(frame_count):
+    for j in range(400):
+        points_set1 = np.empty((12, 2))
+        points_set2 = np.empty((12, 2))
+        for i in range(12):
+            points_set1[i] = my_posture[0,0,i,:2]
+            points_set2[i] = array[j,0,i,:2]
+
+        mean_set1 = np.mean(points_set1, axis=0)
+        mean_set2 = np.mean(points_set2, axis=0)
+
+        centered_points_set1 = points_set1 - mean_set1
+        centered_points_set2 = points_set2 - mean_set2
+
+        
+        transformed_coord = procrustes(centered_points_set2, centered_points_set1)
+
+        trans_set1 = transformed_coord[0]
+        # trans_set2 = transformed_coord[1]
+        disparity = transformed_coord[2]
+        fin_points = trans_set1 +  mean_set1
+        for i in range(12):
+            array[j,0,i,:2] = fin_points[i]
+        if(disparity>0.5):
+            print(j, round(disparity, 2))
+    np.save(buffer_path, array)
+
+
 
 
 @app.route('/')
@@ -199,9 +314,15 @@ def upload_file():
         # return render_template('recording.html')
         # return jsonify({"message": "File uploaded successfully"}), 200
 
-@app.route('/video')
-def video():
-    return Response(time_frame(0, 400), mimetype='multipart/x-mixed-replace; boundary=frame')
+@app.route('/test')
+def test():
+    cam = cv2.VideoCapture(0)
+    height = int(cam.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    width = int(cam.get(cv2.CAP_PROP_FRAME_WIDTH))
+
+    cam.release()
+    return jsonify({"message":height, "width":width})
+
 
 @app.route('/save_video', methods=['POST'])
 def save_video():
